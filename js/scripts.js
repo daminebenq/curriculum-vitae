@@ -4,17 +4,17 @@
  * Copyright (c) 2017 Mohamed Amine Ben Salah
  */
 
-window.onload = function() {
+window.onload = function () {
 
   var messagesEl = document.querySelector('.messages');
   var typingSpeed = 20;
   var loadingText = '<b>•</b><b>•</b><b>•</b>';
   var messageIndex = 0;
 
-  var getCurrentTime = function() {
+  var getCurrentTime = function () {
     var date = new Date();
-    var hours =  date.getHours();
-    var minutes =  date.getMinutes();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
     var current = hours + (minutes * .01);
     if (current >= 5 && current < 19) return 'Have a nice day';
     if (current >= 19 && current < 22) return 'Have a nice evening';
@@ -35,15 +35,15 @@ window.onload = function() {
     '<img width="32px" height="32px" src="https://d30y9cdsu7xlg0.cloudfront.net/png/27926-200.png"> D.'
   ]
 
-  var getFontSize = function() {
+  var getFontSize = function () {
     return parseInt(getComputedStyle(document.body).getPropertyValue('font-size'));
   }
 
-  var pxToRem = function(px) {
+  var pxToRem = function (px) {
     return px / getFontSize() + 'rem';
   }
 
-  var createBubbleElements = function(message, position) {
+  var createBubbleElements = function (message, position) {
     var bubbleEl = document.createElement('div');
     var messageEl = document.createElement('span');
     var loadingEl = document.createElement('span');
@@ -65,7 +65,7 @@ window.onload = function() {
     }
   }
 
-  var getDimentions = function(elements) {
+  var getDimentions = function (elements) {
     return dimensions = {
       loading: {
         w: '4rem',
@@ -82,7 +82,7 @@ window.onload = function() {
     }
   }
 
-  var sendMessage = function(message, position) {
+  var sendMessage = function (message, position) {
     var loadingDuration = (message.replace(/<(?:.|\n)*?>/gm, '').length * typingSpeed) + 500;
     var elements = createBubbleElements(message, position);
     messagesEl.appendChild(elements.bubble);
@@ -92,7 +92,7 @@ window.onload = function() {
     elements.bubble.style.height = dimensions.loading.h;
     elements.message.style.width = dimensions.message.w;
     elements.message.style.height = dimensions.message.h;
-    elements.bubble.style.opacity = 1;
+    elements.bubble.style.opacity = 4;
     var bubbleOffset = elements.bubble.offsetTop + elements.bubble.offsetHeight;
     if (bubbleOffset > messagesEl.offsetHeight) {
       var scrollMessages = anime({
@@ -132,16 +132,16 @@ window.onload = function() {
       duration: 300,
       loop: true,
       direction: 'alternate',
-      delay: function(i) {return (i * 100) + 50}
+      delay: function (i) { return (i * 100) + 50 }
     });
-    setTimeout(function() {
+    setTimeout(function () {
       loadingLoop.pause();
       dotsPulse.restart({
         opacity: 0,
         scale: 0,
         loop: false,
         direction: 'forwards',
-        update: function(a) {
+        update: function (a) {
           if (a.progress >= 65 && elements.bubble.classList.contains('is-loading')) {
             elements.bubble.classList.remove('is-loading');
             anime({
@@ -154,18 +154,18 @@ window.onload = function() {
       });
       bubbleSize.restart({
         scale: 1,
-        width: [dimensions.loading.w, dimensions.bubble.w ],
-        height: [dimensions.loading.h, dimensions.bubble.h ],
+        width: [dimensions.loading.w, dimensions.bubble.w],
+        height: [dimensions.loading.h, dimensions.bubble.h],
         marginTop: 0,
         marginLeft: 0,
-        begin: function() {
+        begin: function () {
           if (messageIndex < messages.length) elements.bubble.classList.remove('cornered');
         }
       })
     }, loadingDuration - 50);
   }
 
-  var sendMessages = function() {
+  var sendMessages = function () {
     var message = messages[messageIndex];
     if (!message) return;
     sendMessage(message);
